@@ -17,16 +17,20 @@ class Snapshot
   property :created_at, DateTime
 end
 
+def config_file
+  YAML.load_file(File.join(File.expand_path(File.dirname(__FILE__)), "config.yml"))
+end
+
 def username
-  YAML.load_file("config.yml")[:username]
+  config_file[:username]
 end
 
 def password
-  YAML.load_file("config.yml")[:password]
+  config_file[:password]
 end
 
 def host
-  YAML.load_file("config.yml")[:host]
+  config_file[:host]
 end
 
 DataMapper.setup(:default, {adapter: 'postgres', host: host, database: 'buses', username: username, password: password})
