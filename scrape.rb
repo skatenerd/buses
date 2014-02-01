@@ -18,7 +18,6 @@ class Snapshot
 end
 
 def username
-  p YAML.load_file("config.yml")
   YAML.load_file("config.yml")[:username]
 end
 
@@ -26,7 +25,11 @@ def password
   YAML.load_file("config.yml")[:password]
 end
 
-DataMapper.setup(:default, {adapter: 'postgres', host: 'localhost', database: 'buses', username: username, password: password})
+def host
+  YAML.load_file("config.yml")[:host]
+end
+
+DataMapper.setup(:default, {adapter: 'postgres', host: host, database: 'buses', username: username, password: password})
 DataMapper.finalize
 
 DataMapper.auto_upgrade!
