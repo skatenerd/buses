@@ -20,6 +20,6 @@ x_values = points.map(&:first)
 y_values = points.map(&:last)
 
 g = Gruff::Scatter.new
-g.title = "hokay"
-g.data("bus stuff", x_values, y_values)
+g.title = "Predicted Bus Arrival Times"
+g.data("Stop 1327, fullerton and sacramento", x_values, y_values)
 g.write("out.png")
