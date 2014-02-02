@@ -3,7 +3,7 @@ require_relative './models'
 
 Models.configure
 
-snapshots = Models::Snapshot.last(50)
+snapshots = Models::Snapshot.last(50).sort_by(&:created_at)
 
 initial_time = snapshots.first.created_at
 
