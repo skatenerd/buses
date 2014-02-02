@@ -52,10 +52,13 @@ GEM
     do_postgres (0.10.13)
       data_objects (= 0.10.13)
     fastercsv (1.5.5)
+    gruff (0.5.1)
+      rmagick
     json (1.8.1)
     json_pure (1.8.1)
     multi_json (1.8.4)
     nokogiri (1.5.8)
+    rmagick (2.13.2)
     stringex (1.5.1)
     uuidtools (2.1.4)
 
@@ -65,4 +68,5 @@ PLATFORMS
 DEPENDENCIES
   datamapper (~> 1.2.0)
   dm-postgres-adapter
+  gruff
   nokogiri (= 1.5.8)
