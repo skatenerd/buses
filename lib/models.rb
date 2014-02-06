@@ -19,7 +19,7 @@ class Models
   end
 
   def self.config_file
-    YAML.load_file(File.join(File.expand_path(File.dirname(__FILE__)), "config.yml"))
+    YAML.load_file(File.join(File.expand_path(File.dirname(__FILE__)), "..", "config.yml"))
   end
 
   def self.username

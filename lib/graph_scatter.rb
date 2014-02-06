@@ -3,7 +3,7 @@ require_relative './models'
 
 Models.configure
 
-snapshots = Models::Snapshot.last(200).sort_by(&:created_at)
+snapshots = Models::Snapshot.last(50).sort_by(&:created_at)
 
 initial_time = snapshots.first.created_at
 
@@ -20,6 +20,6 @@ x_values = points.map(&:first)
 y_values = points.map(&:last)
 
 g = Gruff::Scatter.new
-g.title = "Predicted Bus Arrival Times.\nX axis: elapsed minutes,\nY axis: estimeated time before bus arrives"
+g.title = "Predicted Bus Arrival Times.\nX axis: elapsed minutes,\nY axis: estimated time before bus arrives"
 g.data("Stop 1327, fullerton and sacramento", x_values, y_values)
-g.write("out.png")
+g.write("artifacts/out.png")
