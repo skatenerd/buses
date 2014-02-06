@@ -8,6 +8,7 @@ class Models
     property :id, Serial
     belongs_to :snapshot
     property :minutes, Integer
+    property :vehicle_number, Integer
   end
 
   class Snapshot
