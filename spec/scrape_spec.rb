@@ -36,10 +36,16 @@ describe Scrape do
     predictions.last.minutes.should == 28
   end
 
-  it "scrapes vehicle numbers" do    
+  it "scrapes vehicle numbers" do
     Scrape.scrape_single_stop(1)
     predictions = Models::Snapshot.first.predictions
     predictions.first.vehicle_number.should == 1888
+  end
+
+  it "scrapes route numbers" do
+    Scrape.scrape_single_stop(1)
+    predictions = Models::Snapshot.first.predictions
+    predictions.first.route_number.should == 74
   end
 
   it "scrapes a url corresponding to provided stop number" do

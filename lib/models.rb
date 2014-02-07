@@ -10,6 +10,7 @@ class Models
     belongs_to :snapshot
     property :minutes, Integer
     property :vehicle_number, Integer
+    property :route_number, Integer
   end
 
   class Snapshot

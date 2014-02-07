@@ -8,7 +8,7 @@ class Scrape
     "http://www.ctabustracker.com/bustime/map/getStopPredictions.jsp?eta=true&route=all&stop=#{stop_number}"
   end
 
-  def self.scrape_single_stop(stop_number)    
+  def self.scrape_single_stop(stop_number)
     raw = Net::HTTP.get(URI(stop_url(stop_number)))
 
     prediction_nodes = Nokogiri.parse(raw).css("stop pre")
@@ -16,7 +16,12 @@ class Scrape
     predictions = prediction_nodes.map do |prediction|
       minutes = prediction.css("pt").text
       vehicle_number = prediction.css("v").text
-      Models::Prediction.new(minutes: minutes, vehicle_number: vehicle_number)
+      route_number = prediction.css("rn").text
+      Models::Prediction.new(
+        minutes: minutes,
+        vehicle_number: vehicle_number,
+        route_number: route_number
+      )
     end
 
     Models::Snapshot.create(
