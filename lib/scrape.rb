@@ -16,7 +16,7 @@ class Scrape
     end
 
     Models::Snapshot.create(
-      created_at: Time.now,
+      created_at: DateTime.now,
       predictions: predictions
     )
   end
