@@ -1,5 +1,6 @@
 require 'dm-core'
 require 'dm-migrations'
+require_relative './bus_config'
 
 class Models
   class Prediction
@@ -15,28 +16,13 @@ class Models
     include DataMapper::Resource
     storage_names[:default] = "snapshots"
     property :id, Serial
+    property :stop_number, Integer
     has n, :predictions
     property :created_at, DateTime
   end
 
-  def self.config_file
-    YAML.load_file(File.join(File.expand_path(File.dirname(__FILE__)), "..", "config.yml"))
-  end
-
-  def self.username
-    config_file[:username]
-  end
-
-  def self.password
-    config_file[:password]
-  end
-
-  def self.host
-    config_file[:host]
-  end
-
   def self.configure
-    DataMapper.setup(:default, {adapter: 'postgres', host: host, database: 'buses', username: username, password: password})
+    DataMapper.setup(:default, BusConfig.database_config)
     DataMapper.finalize
     DataMapper.auto_upgrade!
   end
