@@ -1,6 +1,6 @@
 require 'nokogiri'
 require 'net/http'
-require 'models'
+require_relative './models'
 
 class Scrape
   def self.execute
