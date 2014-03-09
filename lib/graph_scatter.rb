@@ -1,25 +1,46 @@
 require 'gruff'
 require_relative './models'
 
-Models.configure
+class GraphScatter
+  attr_reader :x_values, :y_values, :stop_number
 
-snapshots = Models::Snapshot.last(50).sort_by(&:created_at)
+  def initialize(stop_number)
+    @stop_number = stop_number
+    get_points
+  end
 
-initial_time = snapshots.first.created_at
+  def get_points
+    snapshots = Models::Snapshot.last(50, {
+      stop_number: stop_number
+    }).sort_by(&:created_at)
 
-point_clusters = snapshots.map do |snapshot|
-  difference = (snapshot.created_at - initial_time) * 24 * 60
-  snapshot.predictions.map do |prediction|
-    [difference, prediction.minutes]
+    initial_time = snapshots.first.created_at
+
+    point_clusters = snapshots.map do |snapshot|
+      difference = (snapshot.created_at - initial_time) * 24 * 60
+      snapshot.predictions.map do |prediction|
+        [difference, prediction.minutes]
+      end
+    end
+
+    points = point_clusters.reduce(&:+)
+
+    @x_values = points.map(&:first)
+    @y_values = points.map(&:last)
+  end
+
+  def run!
+    g = Gruff::Scatter.new
+    g.title = "Predicted Bus Arrival Times.\nX axis: elapsed minutes,\nY axis: estimated time before bus arrives"
+    g.data("Stop #{stop_number}:  ", x_values, y_values)
+    g.write("artifacts/#{stop_number}.png")
   end
 end
 
-points = point_clusters.reduce(&:+)
 
-x_values = points.map(&:first)
-y_values = points.map(&:last)
-
-g = Gruff::Scatter.new
-g.title = "Predicted Bus Arrival Times.\nX axis: elapsed minutes,\nY axis: estimated time before bus arrives"
-g.data("Stop 1327, fullerton and sacramento", x_values, y_values)
-g.write("artifacts/out.png")
+if __FILE__ == $0
+  Models.configure
+  stop_number = ARGV[0].to_i
+  scatter = GraphScatter.new(stop_number)
+  scatter.run!
+end
