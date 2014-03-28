@@ -34,7 +34,7 @@ class GraphScatter
 
   def run!
     g = Gruff::Scatter.new
-    g.title = "Predicted Bus Arrival Times.\nX axis: elapsed minutes,\nY axis: estimated time before bus arrives"
+    g.title = "Predicted Bus Arrival Times, stop number #{stop_number}\nX axis: elapsed minutes,\nY axis: estimated time before bus arrives"
     get_points.each do |vehicle_number, points|
       g.data("Bus: #{vehicle_number}:  ", points.map(&:first), points.map(&:last))
     end
