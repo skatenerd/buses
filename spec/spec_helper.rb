@@ -8,3 +8,8 @@ RSpec.configure do |_|
   DataMapper.finalize
   DataMapper.auto_migrate!
 end
+
+def minutes(how_many)
+  how_many / (24.0 * 60.0)
+end
+

@@ -9,6 +9,16 @@ class GraphScatter
     get_points
   end
 
+  def update_for_snapshot(bus_paths, snapshot, initial_time)
+    snapshot.predictions.reduce(bus_paths) do |bus_paths, prediction|
+      vehicle_number = prediction.vehicle_number
+      bus_paths[vehicle_number] ||= []
+      difference = (snapshot.created_at - initial_time) * 24 * 60
+      bus_paths[vehicle_number] << [difference, prediction.minutes]
+      bus_paths
+    end
+  end
+
   def get_points
     snapshots = Models::Snapshot.last(50, {
       stop_number: stop_number
@@ -16,23 +26,18 @@ class GraphScatter
 
     initial_time = snapshots.first.created_at
 
-    point_clusters = snapshots.map do |snapshot|
-      difference = (snapshot.created_at - initial_time) * 24 * 60
-      snapshot.predictions.map do |prediction|
-        [difference, prediction.minutes]
-      end
+    bus_paths = snapshots.reduce({}) do |bus_paths, snapshot|
+      bus_paths = update_for_snapshot(bus_paths, snapshot, initial_time)
     end
-
-    points = point_clusters.reduce(&:+)
-
-    @x_values = points.map(&:first)
-    @y_values = points.map(&:last)
+    return bus_paths
   end
 
   def run!
     g = Gruff::Scatter.new
     g.title = "Predicted Bus Arrival Times.\nX axis: elapsed minutes,\nY axis: estimated time before bus arrives"
-    g.data("Stop #{stop_number}:  ", x_values, y_values)
+    get_points.each do |vehicle_number, points|
+      g.data("Bus: #{vehicle_number}:  ", points.map(&:first), points.map(&:last))
+    end
     g.write("artifacts/#{stop_number}.png")
   end
 end
