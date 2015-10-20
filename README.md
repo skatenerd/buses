@@ -1,13 +1,25 @@
-There is an EC2 instance polling the cta bus tracker predictions endpoint every minute, asking for predictions about Sacramento and Fullerton eastbound.
+Overview
+=====================
+This project intends to investigate the bus-bunching that happens on the CTA.
 
-It writes the results of each query to an RDS instance.
+Check out the [Artifacts](https://github.com/skatenerd/buses/tree/master/artifacts) directory to see the "output" of this project.  The diagrams show the relative progress of the buses.
 
-In order to write to (or read from) your own database, you'll have to update the config.yml.  Right now it connects with read-only access to the existing RDS database.
+The components of the project are:
+* A task to perform scraping
+* Analysis code
+* Underlying Models (scraping saves to these, analysis consumes them)
 
-If you want to access the data from another project, View the data this way:
-`psql -h buses.c4woir8uvpdl.us-west-2.rds.amazonaws.com -U readonly buses`
-with password `password`
+There used to be an EC2 instance running the `Scrape` task, saving its data to an RDS instance.  I turned these all off because it got a little bit expensive.
 
+In the days when the RDS instance was up, you could perform the analysis tasks locally (without SSHing to EC2), simply by giving your `config.yml` the RDS instance's read-only credentials.
 
-TODO:
-Configure graph generation to take in a route number, as well as a stop number
+Setup
+=====================
+
+In order to aggregate CTA data yourself, set up a cron job which runs the `Scrape` task every minute.  
+
+You will have to tell the program which SQL database to write to.  In order to do this, you will have to copy `config.example.yml` to your own `config.yml`.  The example config file contains database credentials to a no-longer-existing RDS instance.  You should give it the credentials to your own SQL database.
+
+You will also have to tell the program which "stop numbers" to be interested in.  The "stop number" is a CTA concept, and you can look stop numbers up using the CTA bus tracker. You will have to list the relevant "stop numbers" in your `config.yml`
+
+Once you are scraping data, you can run the analysis tasks to output pretty pictures.  For instance, you could run `ruby graph_scatter.rb 1327` to get data about stop number `1327`
