@@ -1,3 +1,7 @@
+![What Healthy Buses Look Like]
+(https://github.com/skatenerd/buses/blob/master/artifacts/healthy_buses_for_once.png)
+
+
 Overview
 =====================
 This project intends to investigate the bus-bunching that happens on the CTA.
