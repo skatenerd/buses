@@ -1,5 +1,5 @@
-![What Healthy Buses Look Like]
-(https://github.com/skatenerd/buses/blob/master/artifacts/healthy_buses_for_once.png)
+# What healthy buses look like
+![What Healthy Buses Look Like](https://github.com/skatenerd/buses/blob/master/artifacts/healthy_buses_for_once.png)
 
 
 Overview
